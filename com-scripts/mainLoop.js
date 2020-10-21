@@ -26,7 +26,7 @@ function ITEvent_OnPlayerPlayEvent (newTrack) {
     }
     //Write current image
     var a = Math.random() * 10;
-    newTrack.artwork.item(1).saveArtworkToFile(path + "\\artwork" + a);
+    if (newTrack.artwork.count > 0) newTrack.artwork.item(1).saveArtworkToFile(path + "\\artwork" + a);
     var updatePacket = {
         newStatus: itunesApp.playerState,
         name: newTrack.name,
@@ -49,7 +49,16 @@ function ITEvent_OnAboutToPromptUserToQuitEvent(){
 }
 
 var ITEvent_OnPlayerPlayingTrackChangedEvent = ITEvent_OnPlayerPlayEvent;
-var ITEvent_OnPlayerStopEvent = ITEvent_OnPlayerPlayEvent;
+
+function ITEvent_OnPlayerStopEvent(newTrack) {
+    WScript.StdOut.WriteBlankLines(1);
+    if (newTrack.artist)
+    var updatePacket = {
+        newStatus: "Stopped"
+    }
+    if (newTrack.artist) updatePacket.newStatus = "Paused"
+    WScript.StdOut.Write(JSON.stringify(updatePacket));
+}
 
 WScript.ConnectObject(itunesApp, "ITEvent_");
 
